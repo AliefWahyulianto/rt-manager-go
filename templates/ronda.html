@@ -1,0 +1,85 @@
+{{define "content"}}
+<div class="space-y-6">
+    <!-- Header & Tombol Tambah -->
+    <div class="flex justify-between items-center">
+        <div>
+            <h2 class="text-[32px] leading-[40px] font-bold text-[#d6e3ff]">Jadwal Ronda Malam</h2>
+            <p class="text-[#c0c7d4]">Kelola jadwal ronda warga RT 05</p>
+        </div>
+        <a href="/ronda/tambah" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#3394f1] to-[#0060a8] rounded-lg text-[#002b50] font-bold hover:shadow-lg transition-all">
+            <span class="material-symbols-outlined">add</span>
+            Tambah Jadwal
+        </a>
+    </div>
+
+    <!-- Tabel Jadwal Ronda -->
+    <div class="glass-panel rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-[#0d1c32]/50">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-[#c0c7d4] text-sm">No</th>
+                        <th class="px-6 py-4 text-left text-[#c0c7d4] text-sm">Tanggal</th>
+                        <th class="px-6 py-4 text-left text-[#c0c7d4] text-sm">Shift</th>
+                        <th class="px-6 py-4 text-left text-[#c0c7d4] text-sm">Petugas</th>
+                        <th class="px-6 py-4 text-left text-[#c0c7d4] text-sm">Status</th>
+                        <th class="px-6 py-4 text-left text-[#c0c7d4] text-sm">Catatan</th>
+                        <th class="px-6 py-4 text-right text-[#c0c7d4] text-sm">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                    {{range $index, $r := .RondaList}}
+                    <tr class="hover:bg-[#a2c9ff]/5 transition-colors group">
+                        <td class="px-6 py-4 text-[#c0c7d4]">{{add $index 1}}</td>
+                        <td class="px-6 py-4 text-[#d6e3ff] font-semibold">{{formatTanggal $r.Tanggal}}</td>
+                        <td class="px-6 py-4">
+                            {{if eq $r.Shift "Malam 1"}}
+                                <span class="px-2 py-1 rounded bg-blue-500/20 text-blue-400 text-xs">🌙 19:00 - 21:00</span>
+                            {{else if eq $r.Shift "Malam 2"}}
+                                <span class="px-2 py-1 rounded bg-purple-500/20 text-purple-400 text-xs">🌙 21:00 - 23:00</span>
+                            {{else}}
+                                <span class="px-2 py-1 rounded bg-orange-500/20 text-orange-400 text-xs">⭐ 23:00 - 01:00</span>
+                            {{end}}
+                        </td>
+                        <td class="px-6 py-4 text-[#d6e3ff]">{{$r.NamaWarga}}</td>
+                        <td class="px-6 py-4">
+                            {{if eq $r.Status "Selesai"}}
+                                <span class="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-bold">✓ Selesai</span>
+                            {{else if eq $r.Status "Batal"}}
+                                <span class="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-xs font-bold">✗ Batal</span>
+                            {{else}}
+                                <span class="px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-bold">⏳ Terjadwal</span>
+                            {{end}}
+                        </td>
+                        <td class="px-6 py-4 text-[#c0c7d4] max-w-[150px] truncate">{{$r.Catatan}}</td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                {{if eq $r.Status "Terjadwal"}}
+                                <a href="/ronda/selesai/{{$r.ID}}" class="p-2 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500 hover:text-white transition-all" onclick="return confirm('Tandai ronda sudah selesai?')">
+                                    <span class="material-symbols-outlined text-lg">check_circle</span>
+                                </a>
+                                {{end}}
+                                <a href="/ronda/edit/{{$r.ID}}" class="p-2 rounded-lg bg-[#a2c9ff]/10 text-[#a2c9ff] hover:bg-[#a2c9ff] hover:text-[#00315b] transition-all">
+                                    <span class="material-symbols-outlined text-lg">edit</span>
+                                </a>
+                                <a href="/ronda/hapus/{{$r.ID}}" class="p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-all" onclick="return confirm('Hapus jadwal ronda ini?')">
+                                    <span class="material-symbols-outlined text-lg">delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{else}}
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center text-[#c0c7d4]">
+                            <span class="material-symbols-outlined text-4xl mb-2">schedule</span>
+                            <p>Belum ada jadwal ronda</p>
+                            <a href="/ronda/tambah" class="text-[#a2c9ff] hover:underline">Buat jadwal sekarang</a>
+                        </td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{{end}}

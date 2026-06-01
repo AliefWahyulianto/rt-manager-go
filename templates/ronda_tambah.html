@@ -1,0 +1,48 @@
+{{define "content"}}
+<div class="max-w-2xl mx-auto">
+    <div class="glass-panel rounded-2xl p-8">
+        <h2 class="text-[32px] leading-[40px] font-bold text-[#d6e3ff] mb-2">Tambah Jadwal Ronda</h2>
+        <p class="text-[#c0c7d4] mb-6">Atur jadwal ronda malam untuk warga</p>
+
+        <form method="POST" action="/ronda/tambah" class="space-y-5">
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Pilih Petugas</label>
+                <select name="warga_id" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+                    <option value="">-- Pilih Warga --</option>
+                    {{range .WargaList}}
+                    <option value="{{.ID}}">{{.Nama}} - {{.Alamat}}</option>
+                    {{end}}
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Tanggal Ronda</label>
+                <input type="date" name="tanggal" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Shift Ronda</label>
+                <select name="shift" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+                    <option value="Malam 1">🌙 Malam 1 (19:00 - 21:00)</option>
+                    <option value="Malam 2">🌙 Malam 2 (21:00 - 23:00)</option>
+                    <option value="Dini Hari">⭐ Dini Hari (23:00 - 01:00)</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Catatan (opsional)</label>
+                <textarea name="catatan" rows="3" class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]" placeholder="Contoh: Bawa senter, kenakan rompi"></textarea>
+            </div>
+
+            <div class="flex gap-4 pt-4">
+                <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-[#3394f1] to-[#0060a8] text-[#002b50] font-bold">
+                    Simpan Jadwal
+                </button>
+                <a href="/ronda" class="flex-1 py-3 rounded-xl text-center bg-[#1c2a41] border border-white/10 text-[#c0c7d4] hover:bg-[#2c3951]">
+                    Batal
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{{end}}

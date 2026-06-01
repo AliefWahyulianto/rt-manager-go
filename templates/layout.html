@@ -1,0 +1,125 @@
+ 
+<!DOCTYPE html>
+<html class="dark" lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RT Manager - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #041329;
+            color: #d6e3ff;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(11, 32, 54, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-panel:hover {
+            box-shadow: 0 0 20px rgba(30, 136, 229, 0.15);
+            border-color: rgba(30, 136, 229, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .cyber-bg {
+            background: radial-gradient(circle at 50% -20%, #1e3a8a 0%, #041329 70%);
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="cyber-bg">
+
+<!-- Sidebar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#041329]/70 backdrop-blur-xl border-r border-white/10 shadow-[0_0_20px_rgba(30,136,229,0.1)] flex flex-col py-4 z-50">
+    <div class="px-6 py-8 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-[#3394f1] flex items-center justify-center shadow-[0_0_15px_rgba(51,148,241,0.5)]">
+            <span class="material-symbols-outlined text-[#002b50]" style="font-variation-settings: 'FILL' 1;">admin_panel_settings</span>
+        </div>
+        <div>
+            <h1 class="text-[20px] leading-[28px] font-bold text-[#a2c9ff]">Pak RT</h1>
+            <p class="text-[13px] leading-[18px] text-[#c0c7d4] opacity-70">Ketua RT 05</p>
+        </div>
+    </div>
+    
+    <nav class="flex-1 mt-4 px-4 space-y-2">
+        <a href="/" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 {{if eq .ActivePage "dashboard"}}text-[#a2c9ff] border-l-4 border-[#a2c9ff] bg-[#a2c9ff]/10{{else}}text-[#c0c7d4] hover:bg-[#2c3951]/50{{end}}">
+            <span class="material-symbols-outlined">home</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="/iuran" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 {{if eq .ActivePage "iuran"}}text-[#a2c9ff] border-l-4 border-[#a2c9ff] bg-[#a2c9ff]/10{{else}}text-[#c0c7d4] hover:bg-[#2c3951]/50{{end}}">
+            <span class="material-symbols-outlined">payments</span>
+            <span>Iuran RT</span>
+        </a>
+        <a href="/ronda" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 {{if eq .ActivePage "ronda"}}text-[#a2c9ff] border-l-4 border-[#a2c9ff] bg-[#a2c9ff]/10{{else}}text-[#c0c7d4] hover:bg-[#2c3951]/50{{end}}">
+            <span class="material-symbols-outlined">schedule</span>
+            <span>Jadwal Ronda</span>
+        </a>
+        <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-[#c0c7d4] hover:bg-[#2c3951]/50 active:scale-95">
+            <span class="material-symbols-outlined">description</span>
+            <span class="text-[16px] leading-[24px]">Laporan</span>
+        </a>
+        <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-[#c0c7d4] hover:bg-[#2c3951]/50 active:scale-95">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="text-[16px] leading-[24px]">Pengaturan</span>
+        </a>
+    </nav>
+
+    <div class="mt-auto px-6 py-6 border-t border-white/5">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#3394f1]/20 flex items-center justify-center border-2 border-[#a2c9ff]/30">
+                <span class="material-symbols-outlined text-[#a2c9ff]">person</span>
+            </div>
+            <div class="overflow-hidden">
+                <p class="text-[13px] leading-[18px] font-bold text-[#d6e3ff] truncate">Bambang Wijaya</p>
+                <p class="text-[10px] text-[#a2c9ff]/70 uppercase tracking-widest">Administrator</p>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- Header -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-[#041329]/50 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-6 z-40">
+    <div class="flex items-center gap-4 flex-1">
+        <form method="GET" action="/" class="relative w-full max-w-md">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#c0c7d4]/50 text-xl">search</span>
+            <input type="text" name="search" value="{{.Keyword}}" placeholder="Cari data warga..." class="w-full bg-[#010e24] border border-[#404752]/30 rounded-full py-2 pl-10 pr-4 text-[#d6e3ff] focus:outline-none focus:border-[#a2c9ff]/50 focus:ring-1 focus:ring-[#a2c9ff]/20 transition-all">
+        </form>
+    </div>
+    <div class="flex items-center gap-6">
+        <h2 class="text-[20px] leading-[28px] font-black text-[#d6e3ff] hidden lg:block">Selamat datang, Pak RT</h2>
+        <div class="flex items-center gap-3">
+            <div class="relative cursor-pointer hover:text-[#a2c9ff] transition-colors p-2 rounded-full hover:bg-white/5">
+                <span class="material-symbols-outlined">notifications</span>
+                <span class="absolute top-2 right-2 w-2 h-2 bg-[#ffb4ab] rounded-full border border-[#041329] shadow-[0_0_8px_rgba(255,180,171,0.6)]"></span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="ml-64 pt-24 px-6 pb-12">
+    {{template "content" .}}
+</main>
+
+<!-- Floating Action Button (hanya di dashboard) -->
+{{if eq .ActivePage "dashboard"}}
+<a href="/tambah" class="fixed bottom-10 right-10 flex items-center gap-3 px-6 py-4 bg-gradient-to-br from-[#3394f1] to-[#0060a8] rounded-full shadow-[0_10px_30px_rgba(51,148,241,0.4)] hover:shadow-[0_15px_40px_rgba(51,148,241,0.6)] hover:scale-105 active:scale-95 transition-all z-50 group">
+    <span class="material-symbols-outlined text-[#002b50] group-hover:rotate-90 transition-transform">add</span>
+    <span class="text-[20px] leading-[28px] font-bold text-[#002b50]">Tambah Data</span>
+</a>
+{{end}}
+
+</body>
+</html>

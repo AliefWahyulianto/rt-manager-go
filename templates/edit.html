@@ -1,0 +1,43 @@
+ 
+{{define "content"}}
+<div class="max-w-2xl mx-auto">
+    <div class="glass-panel rounded-2xl p-8">
+        <h2 class="text-[32px] leading-[40px] font-bold text-[#d6e3ff] mb-2">Edit Data Warga</h2>
+        <p class="text-[#c0c7d4] text-[16px] leading-[24px] mb-6">Ubah informasi warga</p>
+
+        <form method="POST" action="/edit/{{.Warga.ID}}" class="space-y-5">
+            <div>
+                <label class="block text-[#c0c7d4] text-[13px] leading-[18px] uppercase tracking-wider mb-2">Nama Lengkap</label>
+                <input type="text" name="nama" value="{{.Warga.Nama}}" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff] focus:outline-none focus:border-[#a2c9ff]/50 focus:ring-1 focus:ring-[#a2c9ff]/20 transition-all">
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-[13px] leading-[18px] uppercase tracking-wider mb-2">NIK (16 digit)</label>
+                <input type="text" name="nik" value="{{.Warga.NIK}}" pattern="[0-9]{16}" maxlength="16" class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff] focus:outline-none focus:border-[#a2c9ff]/50 focus:ring-1 focus:ring-[#a2c9ff]/20 transition-all">
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-[13px] leading-[18px] uppercase tracking-wider mb-2">Alamat</label>
+                <input type="text" name="alamat" value="{{.Warga.Alamat}}" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff] focus:outline-none focus:border-[#a2c9ff]/50 focus:ring-1 focus:ring-[#a2c9ff]/20 transition-all">
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-[13px] leading-[18px] uppercase tracking-wider mb-2">Status</label>
+                <select name="status" class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+                    <option value="Tetap" {{if eq .Warga.Status "Tetap"}}selected{{end}}>Tetap</option>
+                    <option value="Kontrak" {{if eq .Warga.Status "Kontrak"}}selected{{end}}>Kontrak</option>
+                </select>
+            </div>
+
+            <div class="flex gap-4 pt-4">
+                <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-[#3394f1] to-[#0060a8] text-[#002b50] font-bold hover:shadow-[0_0_20px_rgba(51,148,241,0.4)] transition-all">
+                    Update Data
+                </button>
+                <a href="/" class="flex-1 py-3 rounded-xl text-center bg-[#1c2a41] border border-white/10 text-[#c0c7d4] hover:bg-[#2c3951] transition-all">
+                    Batal
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{{end}}

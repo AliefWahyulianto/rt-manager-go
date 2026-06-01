@@ -1,0 +1,59 @@
+cat > templates/ronda_edit.html << 'EOF'
+{{define "content"}}
+<div class="max-w-2xl mx-auto">
+    <div class="glass-panel rounded-2xl p-8">
+        <h2 class="text-[32px] leading-[40px] font-bold text-[#d6e3ff] mb-2">Edit Jadwal Ronda</h2>
+        <p class="text-[#c0c7d4] mb-6">Ubah informasi jadwal ronda</p>
+
+        <form method="POST" action="/ronda/edit/{{.Ronda.ID}}" class="space-y-5">
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Pilih Petugas</label>
+                <select name="warga_id" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+                    <option value="">-- Pilih Warga --</option>
+                    {{range .WargaList}}
+                    <option value="{{.ID}}" {{if eq .ID $.Ronda.WargaID}}selected{{end}}>{{.Nama}} - {{.Alamat}}</option>
+                    {{end}}
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Tanggal Ronda</label>
+                <input type="date" name="tanggal" value="{{.Ronda.Tanggal}}" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Shift</label>
+                <select name="shift" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+                    <option value="Malam 1" {{if eq .Ronda.Shift "Malam 1"}}selected{{end}}>🌙 Malam 1 (19:00 - 21:00)</option>
+                    <option value="Malam 2" {{if eq .Ronda.Shift "Malam 2"}}selected{{end}}>🌙 Malam 2 (21:00 - 23:00)</option>
+                    <option value="Dini Hari" {{if eq .Ronda.Shift "Dini Hari"}}selected{{end}}>⭐ Dini Hari (23:00 - 01:00)</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Status</label>
+                <select name="status" class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+                    <option value="Terjadwal" {{if eq .Ronda.Status "Terjadwal"}}selected{{end}}>⏳ Terjadwal</option>
+                    <option value="Selesai" {{if eq .Ronda.Status "Selesai"}}selected{{end}}>✓ Selesai</option>
+                    <option value="Batal" {{if eq .Ronda.Status "Batal"}}selected{{end}}>✗ Batal</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Catatan</label>
+                <textarea name="catatan" rows="2" class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">{{.Ronda.Catatan}}</textarea>
+            </div>
+
+            <div class="flex gap-4 pt-4">
+                <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-[#3394f1] to-[#0060a8] text-[#002b50] font-bold hover:shadow-lg transition-all">
+                    Update Jadwal
+                </button>
+                <a href="/ronda" class="flex-1 py-3 rounded-xl text-center bg-[#1c2a41] border border-white/10 text-[#c0c7d4] hover:bg-[#2c3951] transition-all">
+                    Batal
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{{end}}
+EOF
