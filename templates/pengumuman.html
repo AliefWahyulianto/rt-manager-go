@@ -1,0 +1,57 @@
+cat > templates/pengumuman.html << 'EOF'
+{{define "content"}}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <div>
+            <h2 class="text-[32px] leading-[40px] font-bold text-[#d6e3ff]">Pengumuman</h2>
+            <p class="text-[#c0c7d4]">Informasi dan pengumuman untuk warga RT 05</p>
+        </div>
+        <a href="/pengumuman/tambah" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#3394f1] to-[#0060a8] rounded-lg text-[#002b50] font-bold hover:shadow-lg">
+            <span class="material-symbols-outlined">add</span>
+            Buat Pengumuman
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6">
+        {{range .PengumumanList}}
+        <div class="glass-panel rounded-2xl p-6 hover:shadow-[0_0_20px_rgba(30,136,229,0.15)] transition-all">
+            <div class="flex justify-between items-start">
+                <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="material-symbols-outlined text-[#a2c9ff]">campaign</span>
+                        <h3 class="text-xl font-bold text-[#d6e3ff]">{{.Judul}}</h3>
+                        {{if eq .Status "Aktif"}}
+                            <span class="px-2 py-1 rounded-full bg-green-500/20 text-green-400 text-xs">Aktif</span>
+                        {{else}}
+                            <span class="px-2 py-1 rounded-full bg-gray-500/20 text-gray-400 text-xs">Arsip</span>
+                        {{end}}
+                    </div>
+                    <p class="text-[#c0c7d4] text-sm mb-2">{{formatTanggal .Tanggal}}</p>
+                    <p class="text-[#d6e3ff] leading-relaxed whitespace-pre-line">{{.Isi}}</p>
+                </div>
+                <div class="flex gap-2 ml-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {{if eq .Status "Aktif"}}
+                    <a href="/pengumuman/arsip/{{.ID}}" class="p-2 rounded-lg bg-gray-500/20 text-gray-400 hover:bg-gray-500 hover:text-white" onclick="return confirm('Arsipkan pengumuman ini?')">
+                        <span class="material-symbols-outlined text-lg">archive</span>
+                    </a>
+                    {{end}}
+                    <a href="/pengumuman/edit/{{.ID}}" class="p-2 rounded-lg bg-[#a2c9ff]/10 text-[#a2c9ff] hover:bg-[#a2c9ff] hover:text-[#00315b]">
+                        <span class="material-symbols-outlined text-lg">edit</span>
+                    </a>
+                    <a href="/pengumuman/hapus/{{.ID}}" class="p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white" onclick="return confirm('Hapus pengumuman ini?')">
+                        <span class="material-symbols-outlined text-lg">delete</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="glass-panel rounded-2xl p-12 text-center">
+            <span class="material-symbols-outlined text-5xl text-[#c0c7d4] mb-3">campaign</span>
+            <p class="text-[#c0c7d4]">Belum ada pengumuman</p>
+            <a href="/pengumuman/tambah" class="text-[#a2c9ff] hover:underline">Buat pengumuman pertama</a>
+        </div>
+        {{end}}
+    </div>
+</div>
+{{end}}
+EOF

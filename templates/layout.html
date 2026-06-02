@@ -53,28 +53,37 @@
         </div>
     </div>
     
-    <nav class="flex-1 mt-4 px-4 space-y-2">
-        <a href="/" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 {{if eq .ActivePage "dashboard"}}text-[#a2c9ff] border-l-4 border-[#a2c9ff] bg-[#a2c9ff]/10{{else}}text-[#c0c7d4] hover:bg-[#2c3951]/50{{end}}">
-            <span class="material-symbols-outlined">home</span>
-            <span>Dashboard</span>
-        </a>
-        <a href="/iuran" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 {{if eq .ActivePage "iuran"}}text-[#a2c9ff] border-l-4 border-[#a2c9ff] bg-[#a2c9ff]/10{{else}}text-[#c0c7d4] hover:bg-[#2c3951]/50{{end}}">
-            <span class="material-symbols-outlined">payments</span>
-            <span>Iuran RT</span>
-        </a>
-        <a href="/ronda" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 {{if eq .ActivePage "ronda"}}text-[#a2c9ff] border-l-4 border-[#a2c9ff] bg-[#a2c9ff]/10{{else}}text-[#c0c7d4] hover:bg-[#2c3951]/50{{end}}">
-            <span class="material-symbols-outlined">schedule</span>
-            <span>Jadwal Ronda</span>
-        </a>
-        <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-[#c0c7d4] hover:bg-[#2c3951]/50 active:scale-95">
-            <span class="material-symbols-outlined">description</span>
-            <span class="text-[16px] leading-[24px]">Laporan</span>
-        </a>
-        <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-[#c0c7d4] hover:bg-[#2c3951]/50 active:scale-95">
-            <span class="material-symbols-outlined">settings</span>
-            <span class="text-[16px] leading-[24px]">Pengaturan</span>
-        </a>
-    </nav>
+   <nav class="flex-1 mt-4 px-4 space-y-2">
+    <a href="/" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 {{if eq .ActivePage "dashboard"}}text-[#a2c9ff] border-l-4 border-[#a2c9ff] bg-[#a2c9ff]/10{{else}}text-[#c0c7d4] hover:bg-[#2c3951]/50{{end}}">
+        <span class="material-symbols-outlined">home</span>
+        <span>Dashboard</span>
+    </a>
+    
+    <a href="/pengumuman" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 {{if eq .ActivePage "pengumuman"}}text-[#a2c9ff] border-l-4 border-[#a2c9ff] bg-[#a2c9ff]/10{{else}}text-[#c0c7d4] hover:bg-[#2c3951]/50{{end}}">
+        <span class="material-symbols-outlined">campaign</span>
+        <span>Pengumuman</span>
+    </a>
+    
+    <a href="/iuran" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 {{if eq .ActivePage "iuran"}}text-[#a2c9ff] border-l-4 border-[#a2c9ff] bg-[#a2c9ff]/10{{else}}text-[#c0c7d4] hover:bg-[#2c3951]/50{{end}}">
+        <span class="material-symbols-outlined">payments</span>
+        <span>Iuran RT</span>
+    </a>
+    
+    <a href="/ronda" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 {{if eq .ActivePage "ronda"}}text-[#a2c9ff] border-l-4 border-[#a2c9ff] bg-[#a2c9ff]/10{{else}}text-[#c0c7d4] hover:bg-[#2c3951]/50{{end}}">
+        <span class="material-symbols-outlined">schedule</span>
+        <span>Jadwal Ronda</span>
+    </a>
+    
+    <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-[#c0c7d4] hover:bg-[#2c3951]/50">
+        <span class="material-symbols-outlined">description</span>
+        <span>Laporan</span>
+    </a>
+    
+    <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-[#c0c7d4] hover:bg-[#2c3951]/50">
+        <span class="material-symbols-outlined">settings</span>
+        <span>Pengaturan</span>
+    </a>
+</nav>
 
     <div class="mt-auto px-6 py-6 border-t border-white/5">
         <div class="flex items-center gap-3">

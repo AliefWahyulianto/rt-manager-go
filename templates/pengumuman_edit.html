@@ -1,0 +1,39 @@
+cat > templates/pengumuman_edit.html << 'EOF'
+{{define "content"}}
+<div class="max-w-3xl mx-auto">
+    <div class="glass-panel rounded-2xl p-8">
+        <h2 class="text-[32px] leading-[40px] font-bold text-[#d6e3ff] mb-2">Edit Pengumuman</h2>
+
+        <form method="POST" action="/pengumuman/edit/{{.Pengumuman.ID}}" class="space-y-5">
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Judul Pengumuman</label>
+                <input type="text" name="judul" value="{{.Pengumuman.Judul}}" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Tanggal</label>
+                <input type="date" name="tanggal" value="{{.Pengumuman.Tanggal}}" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Isi Pengumuman</label>
+                <textarea name="isi" rows="6" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">{{.Pengumuman.Isi}}</textarea>
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Status</label>
+                <select name="status" class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+                    <option value="Aktif" {{if eq .Pengumuman.Status "Aktif"}}selected{{end}}>Aktif</option>
+                    <option value="Arsip" {{if eq .Pengumuman.Status "Arsip"}}selected{{end}}>Arsip</option>
+                </select>
+            </div>
+
+            <div class="flex gap-4 pt-4">
+                <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-[#3394f1] to-[#0060a8] text-[#002b50] font-bold">Update</button>
+                <a href="/pengumuman" class="flex-1 py-3 rounded-xl text-center bg-[#1c2a41] text-[#c0c7d4]">Batal</a>
+            </div>
+        </form>
+    </div>
+</div>
+{{end}}
+EOF

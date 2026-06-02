@@ -47,9 +47,11 @@ func main() {
 	// Inisialisasi model ronda
 	rondaModel := models.NewRondaModel(db)
 	rondaHandler := handlers.NewRondaHandler(rondaModel, wargaModel)
-
 	// Inisialisasi handler
 	wargaHandler := handlers.NewWargaHandler(wargaModel)
+	// Inisialisasi model pengumuman
+	pengumumanModel := models.NewPengumumanModel(db)
+	pengumumanHandler := handlers.NewPengumumanHandler(pengumumanModel)
 
 	// Routing
 	http.HandleFunc("/", wargaHandler.Dashboard)
@@ -69,6 +71,14 @@ func main() {
 	http.HandleFunc("/ronda/edit/", rondaHandler.Edit)
 	http.HandleFunc("/ronda/hapus/", rondaHandler.Hapus)
 	http.HandleFunc("/ronda/selesai/", rondaHandler.TandaiSelesai)
+
+	http.HandleFunc("/pengumuman", pengumumanHandler.Index)
+	http.HandleFunc("/pengumuman/tambah", pengumumanHandler.Tambah)
+	http.HandleFunc("/pengumuman/edit/", pengumumanHandler.Edit)
+	http.HandleFunc("/pengumuman/hapus/", pengumumanHandler.Hapus)
+	http.HandleFunc("/pengumuman/arsip/", pengumumanHandler.Arsipkan)
+
+	http.HandleFunc("/warga/export-pdf", wargaHandler.ExportPDF)
 
 	log.Println("🚀 Server berjalan di http://localhost:8080")
 	log.Println("📁 Database: Badger (folder ./database)")

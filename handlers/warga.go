@@ -7,6 +7,9 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
+	"time"
+
+	"github.com/jung-kurt/gofpdf/v2"
 )
 
 type WargaHandler struct {
@@ -43,6 +46,16 @@ func (h *WargaHandler) Dashboard(w http.ResponseWriter, r *http.Request) {
 
 	totalWarga, _ := h.Model.Count()
 
+	// ========== TAMBAHKAN INI ==========
+	// Ambil pengumuman aktif untuk ditampilkan di dashboard
+	pengumumanModel := models.NewPengumumanModel(h.Model.DB)
+	pengumumanAktif, _ := pengumumanModel.GetAktif()
+
+	// Ambil total iuran terkumpul
+	iuranModel := models.NewIuranModel(h.Model.DB)
+	totalIuran, _ := iuranModel.TotalTerkumpul()
+	// ===================================
+
 	funcMap := template.FuncMap{
 		"add": func(a, b int) int { return a + b },
 		"slice": func(s string, start, end int) string {
@@ -54,13 +67,31 @@ func (h *WargaHandler) Dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 			return s[start:end]
 		},
+		"truncate": func(s string, n int) string {
+			if len(s) > n {
+				return s[:n] + "..."
+			}
+			return s
+		},
+		"first": func(n int, list []models.Pengumuman) []models.Pengumuman { // <-- TAMBAHKAN INI
+			if n > len(list) {
+				return list
+			}
+			return list[:n]
+		},
+		"formatTanggal": func(tanggal string) string { // <-- TAMBAHKAN JUGA INI
+			t, _ := time.Parse("2006-01-02", tanggal)
+			return t.Format("02 Jan 2006")
+		},
 	}
 
 	data := map[string]interface{}{
-		"WargaList":  wargaList,
-		"TotalWarga": totalWarga,
-		"Keyword":    keyword,
-		"ActivePage": "dashboard",
+		"WargaList":       wargaList,
+		"TotalWarga":      totalWarga,
+		"Keyword":         keyword,
+		"ActivePage":      "dashboard",
+		"PengumumanAktif": pengumumanAktif, // TAMBAHKAN
+		"TotalIuran":      totalIuran,      // TAMBAHKAN (untuk statistik)
 	}
 
 	tmpl := template.Must(template.New("layout.html").Funcs(funcMap).ParseFiles("templates/layout.html", "templates/dashboard.html"))
@@ -187,4 +218,62 @@ func (h *WargaHandler) APIWarga(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(wargaList)
+}
+
+// ExportPDF mengexport data warga ke PDF
+func (h *WargaHandler) ExportPDF(w http.ResponseWriter, r *http.Request) {
+	// Ambil semua data warga
+	wargaList, err := h.Model.GetAll()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Buat PDF baru
+	pdf := gofpdf.New("P", "mm", "A4", "")
+	pdf.AddPage()
+	pdf.SetFont("Arial", "B", 16)
+
+	// Header
+	pdf.Cell(40, 10, "Laporan Data Warga RT 05")
+	pdf.Ln(12)
+	pdf.SetFont("Arial", "", 10)
+	pdf.Cell(40, 10, "Tanggal Cetak: "+time.Now().Format("02 Jan 2006 15:04:05"))
+	pdf.Ln(15)
+
+	// Header Tabel
+	pdf.SetFont("Arial", "B", 10)
+	pdf.Cell(15, 8, "No")
+	pdf.Cell(60, 8, "Nama")
+	pdf.Cell(50, 8, "NIK")
+	pdf.Cell(50, 8, "Alamat")
+	pdf.Cell(30, 8, "Status")
+	pdf.Ln(8)
+
+	// Data Tabel
+	pdf.SetFont("Arial", "", 9)
+	for i, w := range wargaList {
+		pdf.Cell(15, 7, strconv.Itoa(i+1))
+		pdf.Cell(60, 7, w.Nama)
+		pdf.Cell(50, 7, w.NIK)
+		pdf.Cell(50, 7, w.Alamat)
+		pdf.Cell(30, 7, w.Status)
+		pdf.Ln(7)
+	}
+
+	// Footer Total
+	pdf.Ln(10)
+	pdf.SetFont("Arial", "B", 10)
+	pdf.Cell(40, 10, "Total Warga: "+strconv.Itoa(len(wargaList)))
+
+	// Set header response
+	w.Header().Set("Content-Type", "application/pdf")
+	w.Header().Set("Content-Disposition", "attachment; filename=laporan_warga.pdf")
+
+	// Output PDF
+	err = pdf.Output(w)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

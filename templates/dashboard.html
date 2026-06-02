@@ -1,7 +1,7 @@
- 
 {{define "content"}}
 <!-- Statistik -->
 <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+    <!-- Card 1: Total Warga -->
     <div class="glass-panel p-6 rounded-xl relative overflow-hidden group">
         <div class="absolute -right-4 -top-4 w-24 h-24 bg-[#a2c9ff]/5 rounded-full blur-2xl group-hover:bg-[#a2c9ff]/10 transition-all"></div>
         <div class="flex items-start justify-between">
@@ -15,12 +15,13 @@
         </div>
     </div>
 
+    <!-- Card 2: Iuran Terkumpul -->
     <div class="glass-panel p-6 rounded-xl relative overflow-hidden group">
         <div class="absolute -right-4 -top-4 w-24 h-24 bg-[#94ccff]/5 rounded-full blur-2xl"></div>
         <div class="flex items-start justify-between">
             <div>
                 <p class="text-[#c0c7d4] text-[13px] leading-[18px] uppercase tracking-wider mb-1">Iuran Terkumpul</p>
-                <h3 class="text-[24px] font-bold text-[#d6e3ff]">Rp 5.200.000</h3>
+                <h3 class="text-[24px] font-bold text-[#d6e3ff]">{{.TotalIuran}}</h3>
             </div>
             <div class="w-12 h-12 rounded-xl bg-[#94ccff]/10 flex items-center justify-center text-[#94ccff]">
                 <span class="material-symbols-outlined text-3xl">payments</span>
@@ -28,54 +29,98 @@
         </div>
     </div>
 
+    <!-- Card 3: Jadwal Ronda -->
     <div class="glass-panel p-6 rounded-xl relative overflow-hidden group">
-    <div class="flex items-start justify-between">
-        <div>
-            <p class="text-[#c0c7d4] text-[13px] leading-[18px] uppercase tracking-wider mb-1">Jadwal Ronda</p>
-            <h3 class="text-[20px] leading-[28px] font-bold text-[#d6e3ff]">Malam ini</h3>
+        <div class="flex items-start justify-between">
+            <div>
+                <p class="text-[#c0c7d4] text-[13px] leading-[18px] uppercase tracking-wider mb-1">Jadwal Ronda</p>
+                <h3 class="text-[20px] leading-[28px] font-bold text-[#d6e3ff]">Malam ini</h3>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-[#c9c6c5]/10 flex items-center justify-center text-[#c9c6c5]">
+                <span class="material-symbols-outlined text-3xl">schedule</span>
+            </div>
         </div>
-        <div class="w-12 h-12 rounded-xl bg-[#c9c6c5]/10 flex items-center justify-center text-[#c9c6c5]">
-            <span class="material-symbols-outlined text-3xl">schedule</span>
-        </div>
-    </div>
-    {{if .RondaMalamIni}}
-        {{range .RondaMalamIni}}
-        <div class="mt-3 text-sm">
-            <p class="text-[#d6e3ff] font-semibold">{{.NamaWarga}}</p>
-            <p class="text-[#c0c7d4] text-xs">{{.Shift}}</p>
-        </div>
+        {{if .RondaMalamIni}}
+            {{range .RondaMalamIni}}
+            <div class="mt-3 text-sm">
+                <p class="text-[#d6e3ff] font-semibold">{{.NamaWarga}}</p>
+                <p class="text-[#c0c7d4] text-xs">{{.Shift}}</p>
+            </div>
+            {{end}}
+        {{else}}
+            <p class="mt-4 text-[#c0c7d4] text-[13px] leading-[18px]">Tidak ada jadwal malam ini</p>
         {{end}}
-    {{else}}
-        <p class="mt-4 text-[#c0c7d4] text-[13px] leading-[18px]">Tidak ada jadwal malam ini</p>
-    {{end}}
-    <a href="/ronda" class="mt-3 text-[#a2c9ff] text-xs hover:underline block">Lihat semua jadwal →</a>
-</div>
+        <a href="/ronda" class="mt-3 text-[#a2c9ff] text-xs hover:underline block">Lihat semua jadwal →</a>
+    </div>
 
+    <!-- Card 4: Pengumuman Aktif -->
     <div class="glass-panel p-6 rounded-xl relative overflow-hidden group">
         <div class="flex items-start justify-between">
             <div>
                 <p class="text-[#c0c7d4] text-[13px] leading-[18px] uppercase tracking-wider mb-1">Pengumuman Aktif</p>
-                <h3 class="text-[32px] font-bold text-[#d6e3ff]">2</h3>
+                <h3 class="text-[32px] font-bold text-[#d6e3ff]">{{len .PengumumanAktif}}</h3>
             </div>
             <div class="w-12 h-12 rounded-xl bg-[#ffb4ab]/10 flex items-center justify-center text-[#ffb4ab]">
                 <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">campaign</span>
             </div>
         </div>
-        <div class="mt-4 flex items-center gap-2 text-[#ffb4ab] text-[13px] leading-[18px]">
-            <span class="material-symbols-outlined text-sm">emergency_home</span>
-            <span>Kerja Bakti Minggu besok</span>
-        </div>
+        {{if gt (len .PengumumanAktif) 0}}
+            <div class="mt-4 flex items-center gap-2 text-[#ffb4ab] text-[13px] leading-[18px]">
+                <span class="material-symbols-outlined text-sm">info</span>
+                <span>{{len .PengumumanAktif}} pengumuman aktif</span>
+            </div>
+        {{else}}
+            <div class="mt-4 flex items-center gap-2 text-[#c0c7d4] text-[13px] leading-[18px]">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Tidak ada pengumuman</span>
+            </div>
+        {{end}}
     </div>
+</section>
+
+<!-- Pengumuman Terbaru (Detail) -->
+<section class="glass-panel rounded-2xl p-6 mb-8">
+    <div class="flex items-center gap-2 mb-4">
+        <span class="material-symbols-outlined text-[#a2c9ff]">campaign</span>
+        <h3 class="text-xl font-bold text-[#d6e3ff]">Pengumuman Terbaru</h3>
+    </div>
+    
+    {{if .PengumumanAktif}}
+        <div class="space-y-3">
+            {{range first 3 .PengumumanAktif}}
+            <div class="border-b border-white/10 pb-3 last:border-0">
+                <div class="flex justify-between items-start">
+                    <h4 class="font-semibold text-[#d6e3ff]">{{.Judul}}</h4>
+                    <span class="text-xs text-[#c0c7d4]">{{formatTanggal .Tanggal}}</span>
+                </div>
+                <p class="text-sm text-[#c0c7d4] mt-1">{{truncate .Isi 100}}</p>
+            </div>
+            {{end}}
+        </div>
+        {{if gt (len .PengumumanAktif) 3}}
+        <div class="mt-3 text-right">
+            <a href="/pengumuman" class="text-[#a2c9ff] text-sm hover:underline">Lihat semua →</a>
+        </div>
+        {{end}}
+    {{else}}
+        <p class="text-[#c0c7d4] text-sm">Belum ada pengumuman. <a href="/pengumuman/tambah" class="text-[#a2c9ff] hover:underline">Buat pengumuman pertama</a></p>
+    {{end}}
 </section>
 
 <!-- Tabel Data Warga -->
 <section class="glass-panel rounded-2xl overflow-hidden shadow-2xl border border-white/5">
     <div class="px-8 py-6 border-b border-white/5 flex justify-between items-center bg-white/5">
-        <div>
-            <h2 class="text-[32px] leading-[40px] font-bold text-[#d6e3ff]">Data Warga</h2>
-            <p class="text-[#c0c7d4] text-[16px] leading-[24px]">Kelola informasi kependudukan RT 05</p>
-        </div>
+    <div>
+        <h2 class="text-[32px] leading-[40px] font-bold text-[#d6e3ff]">Data Warga</h2>
+        <p class="text-[#c0c7d4] text-[16px] leading-[24px]">Kelola informasi kependudukan RT 05</p>
     </div>
+    
+    <!-- TOMBOL EXPORT PDF -->
+    <a href="/warga/export-pdf" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500 hover:text-white transition-all">
+        <span class="material-symbols-outlined text-lg">picture_as_pdf</span>
+        Export PDF
+    </a>
+</div>
 
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">

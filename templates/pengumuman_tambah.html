@@ -1,0 +1,44 @@
+cat > templates/pengumuman_tambah.html << 'EOF'
+{{define "content"}}
+<div class="max-w-3xl mx-auto">
+    <div class="glass-panel rounded-2xl p-8">
+        <h2 class="text-[32px] leading-[40px] font-bold text-[#d6e3ff] mb-2">Buat Pengumuman Baru</h2>
+        <p class="text-[#c0c7d4] mb-6">Informasi ini akan ditampilkan di dashboard warga</p>
+
+        <form method="POST" action="/pengumuman/tambah" class="space-y-5">
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Judul Pengumuman</label>
+                <input type="text" name="judul" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff] focus:outline-none focus:border-[#a2c9ff]/50" placeholder="Contoh: Kerja Bakti Sabtu Minggu Ini">
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Tanggal</label>
+                <input type="date" name="tanggal" value="{{now}}" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Isi Pengumuman</label>
+                <textarea name="isi" rows="6" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff] focus:outline-none focus:border-[#a2c9ff]/50" placeholder="Tulis detail pengumuman di sini..."></textarea>
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Status</label>
+                <select name="status" class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+                    <option value="Aktif">Aktif (langsung tampil)</option>
+                    <option value="Arsip">Arsip (simpan dulu)</option>
+                </select>
+            </div>
+
+            <div class="flex gap-4 pt-4">
+                <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-[#3394f1] to-[#0060a8] text-[#002b50] font-bold hover:shadow-lg">
+                    Publikasikan
+                </button>
+                <a href="/pengumuman" class="flex-1 py-3 rounded-xl text-center bg-[#1c2a41] border border-white/10 text-[#c0c7d4] hover:bg-[#2c3951]">
+                    Batal
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{{end}}
+EOF
