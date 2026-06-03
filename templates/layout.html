@@ -73,6 +73,11 @@
         <span class="material-symbols-outlined">schedule</span>
         <span>Jadwal Ronda</span>
     </a>
+
+    <a href="/event" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 {{if eq .ActivePage "event"}}text-[#a2c9ff] border-l-4 border-[#a2c9ff] bg-[#a2c9ff]/10{{else}}text-[#c0c7d4] hover:bg-[#2c3951]/50{{end}}">
+        <span class="material-symbols-outlined">celebration</span>
+        <span>Event</span>
+    </a>
     
     <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-[#c0c7d4] hover:bg-[#2c3951]/50">
         <span class="material-symbols-outlined">description</span>
@@ -102,6 +107,7 @@
 <header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-[#041329]/50 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-6 z-40">
     <div class="flex items-center gap-4 flex-1">
         <form method="GET" action="/" class="relative w-full max-w-md">
+            <input type="hidden" name="limit" value="{{.Limit}}">
             <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#c0c7d4]/50 text-xl">search</span>
             <input type="text" name="search" value="{{.Keyword}}" placeholder="Cari data warga..." class="w-full bg-[#010e24] border border-[#404752]/30 rounded-full py-2 pl-10 pr-4 text-[#d6e3ff] focus:outline-none focus:border-[#a2c9ff]/50 focus:ring-1 focus:ring-[#a2c9ff]/20 transition-all">
         </form>

@@ -1,0 +1,47 @@
+cat > templates/event_tambah.html << 'EOF'
+{{define "content"}}
+<div class="max-w-2xl mx-auto">
+    <div class="glass-panel rounded-2xl p-8">
+        <h2 class="text-[32px] leading-[40px] font-bold text-[#d6e3ff] mb-2">Buat Event Baru</h2>
+        <p class="text-[#c0c7d4] mb-6">Kelola acara warga seperti 17 Agustus, arisan, kerja bakti, dll</p>
+
+        <form method="POST" action="/event/tambah" class="space-y-5">
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Nama Event</label>
+                <input type="text" name="nama_event" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]" placeholder="Contoh: Lomba 17 Agustusan">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-[#c0c7d4] text-sm mb-2">Tanggal</label>
+                    <input type="date" name="tanggal" value="{{now}}" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+                </div>
+                <div>
+                    <label class="block text-[#c0c7d4] text-sm mb-2">Lokasi</label>
+                    <input type="text" name="lokasi" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]" placeholder="Contoh: Balai RT 05">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Anggaran (Rp)</label>
+                <input type="number" name="anggaran" class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]" placeholder="0">
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Deskripsi</label>
+                <textarea name="deskripsi" rows="4" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]" placeholder="Detail acara..."></textarea>
+            </div>
+
+            <div class="flex gap-4 pt-4">
+                <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-[#3394f1] to-[#0060a8] text-[#002b50] font-bold hover:shadow-lg">
+                    Simpan Event
+                </button>
+                <a href="/event" class="flex-1 py-3 rounded-xl text-center bg-[#1c2a41] border border-white/10 text-[#c0c7d4] hover:bg-[#2c3951]">
+                    Batal
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{{end}}
+EOF

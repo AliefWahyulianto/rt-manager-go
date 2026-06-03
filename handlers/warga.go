@@ -29,14 +29,39 @@ func (h *WargaHandler) Dashboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Ambil parameter dari URL
 	keyword := r.URL.Query().Get("search")
-	var wargaList []models.Warga
+	pageStr := r.URL.Query().Get("page")
+	limitStr := r.URL.Query().Get("limit")
+
+	// Set default values
+	page := 1
+	if pageStr != "" {
+		page, _ = strconv.Atoi(pageStr)
+		if page < 1 {
+			page = 1
+		}
+	}
+
+	limit := 10 // default 10 data per halaman
+	if limitStr != "" {
+		limit, _ = strconv.Atoi(limitStr)
+		if limit < 1 {
+			limit = 10
+		}
+		if limit > 100 {
+			limit = 100
+		}
+	}
+
+	// Ambil semua data warga (dengan atau tanpa search)
+	var allWarga []models.Warga
 	var err error
 
 	if keyword != "" {
-		wargaList, err = h.Model.Search(keyword)
+		allWarga, err = h.Model.Search(keyword)
 	} else {
-		wargaList, err = h.Model.GetAll()
+		allWarga, err = h.Model.GetAll()
 	}
 
 	if err != nil {
@@ -44,20 +69,52 @@ func (h *WargaHandler) Dashboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Hitung total data
+	totalData := len(allWarga)
+	totalPages := (totalData + limit - 1) / limit
+
+	// Pagination: ambil data sesuai halaman
+	start := (page - 1) * limit
+	end := start + limit
+	if end > totalData {
+		end = totalData
+	}
+
+	var wargaList []models.Warga
+	if start < totalData {
+		wargaList = allWarga[start:end]
+	} else {
+		wargaList = []models.Warga{}
+	}
+
 	totalWarga, _ := h.Model.Count()
 
-	// ========== TAMBAHKAN INI ==========
-	// Ambil pengumuman aktif untuk ditampilkan di dashboard
+	// Ambil pengumuman aktif
 	pengumumanModel := models.NewPengumumanModel(h.Model.DB)
 	pengumumanAktif, _ := pengumumanModel.GetAktif()
 
 	// Ambil total iuran terkumpul
 	iuranModel := models.NewIuranModel(h.Model.DB)
 	totalIuran, _ := iuranModel.TotalTerkumpul()
-	// ===================================
+
+	// Ambil event yang akan datang
+	eventModel := models.NewEventModel(h.Model.DB)
+	eventMendatang, _ := eventModel.GetEventAkanDatang()
+
+	// Ambil jadwal ronda malam ini
+	rondaModel := models.NewRondaModel(h.Model.DB)
+	rondaMalamIni, _ := rondaModel.GetJadwalMalamIni()
 
 	funcMap := template.FuncMap{
 		"add": func(a, b int) int { return a + b },
+		"sub": func(a, b int) int { return a - b },
+		"iterate": func(count int) []int {
+			var items []int
+			for i := 0; i < count; i++ {
+				items = append(items, i)
+			}
+			return items
+		},
 		"slice": func(s string, start, end int) string {
 			if start >= len(s) {
 				return ""
@@ -73,15 +130,21 @@ func (h *WargaHandler) Dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 			return s
 		},
-		"first": func(n int, list []models.Pengumuman) []models.Pengumuman { // <-- TAMBAHKAN INI
+		"first": func(n int, list []models.Pengumuman) []models.Pengumuman {
 			if n > len(list) {
 				return list
 			}
 			return list[:n]
 		},
-		"formatTanggal": func(tanggal string) string { // <-- TAMBAHKAN JUGA INI
+		"formatTanggal": func(tanggal string) string {
 			t, _ := time.Parse("2006-01-02", tanggal)
 			return t.Format("02 Jan 2006")
+		},
+		"formatRupiah": func(nominal int) string {
+			if nominal == 0 {
+				return "Rp 0"
+			}
+			return "Rp " + strconv.Itoa(nominal)
 		},
 	}
 
@@ -90,8 +153,16 @@ func (h *WargaHandler) Dashboard(w http.ResponseWriter, r *http.Request) {
 		"TotalWarga":      totalWarga,
 		"Keyword":         keyword,
 		"ActivePage":      "dashboard",
-		"PengumumanAktif": pengumumanAktif, // TAMBAHKAN
-		"TotalIuran":      totalIuran,      // TAMBAHKAN (untuk statistik)
+		"PengumumanAktif": pengumumanAktif,
+		"TotalIuran":      totalIuran,
+		"EventMendatang":  eventMendatang,
+		"RondaMalamIni":   rondaMalamIni,
+		"CurrentPage":     page,
+		"TotalPages":      totalPages,
+		"Limit":           limit,
+		"Start":           start + 1,
+		"End":             end,
+		"TotalData":       totalData,
 	}
 
 	tmpl := template.Must(template.New("layout.html").Funcs(funcMap).ParseFiles("templates/layout.html", "templates/dashboard.html"))

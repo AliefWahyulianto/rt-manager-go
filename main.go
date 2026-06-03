@@ -53,6 +53,10 @@ func main() {
 	pengumumanModel := models.NewPengumumanModel(db)
 	pengumumanHandler := handlers.NewPengumumanHandler(pengumumanModel)
 
+	// Inisialisasi model event
+	eventModel := models.NewEventModel(db)
+	eventHandler := handlers.NewEventHandler(eventModel)
+
 	// Routing
 	http.HandleFunc("/", wargaHandler.Dashboard)
 	http.HandleFunc("/tambah", wargaHandler.Tambah)
@@ -79,6 +83,11 @@ func main() {
 	http.HandleFunc("/pengumuman/arsip/", pengumumanHandler.Arsipkan)
 
 	http.HandleFunc("/warga/export-pdf", wargaHandler.ExportPDF)
+
+	http.HandleFunc("/event", eventHandler.Index)
+	http.HandleFunc("/event/tambah", eventHandler.Tambah)
+	http.HandleFunc("/event/edit/", eventHandler.Edit)
+	http.HandleFunc("/event/hapus/", eventHandler.Hapus)
 
 	log.Println("🚀 Server berjalan di http://localhost:8080")
 	log.Println("📁 Database: Badger (folder ./database)")

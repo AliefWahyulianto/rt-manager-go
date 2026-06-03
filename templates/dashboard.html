@@ -78,6 +78,40 @@
     </div>
 </section>
 
+<!-- Event yang Akan Datang -->
+<section class="glass-panel rounded-2xl p-6 mb-8">
+    <div class="flex items-center gap-2 mb-4">
+        <span class="material-symbols-outlined text-[#a2c9ff]">celebration</span>
+        <h3 class="text-xl font-bold text-[#d6e3ff]">Event Mendatang</h3>
+    </div>
+    
+    {{if .EventMendatang}}
+        {{if gt (len .EventMendatang) 0}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {{range $index, $event := .EventMendatang}}
+                    {{if lt $index 2}}
+                    <div class="border border-white/10 rounded-xl p-4 hover:bg-white/5 transition-all">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-semibold text-[#d6e3ff]">{{$event.NamaEvent}}</h4>
+                            <span class="text-xs text-[#c0c7d4]">{{$event.Tanggal}}</span>
+                        </div>
+                        <p class="text-sm text-[#c0c7d4] mt-1">{{$event.Lokasi}}</p>
+                        <p class="text-xs text-[#c0c7d4] mt-2">{{$event.Deskripsi}}</p>
+                    </div>
+                    {{end}}
+                {{end}}
+            </div>
+            {{if gt (len .EventMendatang) 2}}
+            <div class="mt-3 text-right">
+                <a href="/event" class="text-[#a2c9ff] text-sm hover:underline">Lihat semua event →</a>
+            </div>
+            {{end}}
+        {{end}}
+    {{else}}
+        <p class="text-[#c0c7d4] text-sm">Tidak ada event mendatang. <a href="/event/tambah" class="text-[#a2c9ff] hover:underline">Buat event baru</a></p>
+    {{end}}
+</section>
+
 <!-- Pengumuman Terbaru (Detail) -->
 <section class="glass-panel rounded-2xl p-6 mb-8">
     <div class="flex items-center gap-2 mb-4">
@@ -121,7 +155,116 @@
         Export PDF
     </a>
 </div>
+       <!-- Filter & Pagination Controls -->
+<div class="px-8 py-4 border-b border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 bg-white/5">
+    <!-- Kiri: Tampilkan data -->
+    <div class="flex items-center gap-4 flex-wrap justify-center sm:justify-start">
+        <div class="flex items-center gap-2">
+            <span class="text-[#c0c7d4] text-sm whitespace-nowrap">Tampilkan</span>
+            <select id="limitSelect" class="bg-[#010e24] border border-[#404752]/30 rounded-lg px-3 py-1.5 text-[#d6e3ff] text-sm focus:outline-none focus:border-[#a2c9ff]/50 min-w-[70px]">
+                <option value="5" {{if eq .Limit 5}}selected{{end}}>5</option>
+                <option value="10" {{if eq .Limit 10}}selected{{end}}>10</option>
+                <option value="25" {{if eq .Limit 25}}selected{{end}}>25</option>
+                <option value="50" {{if eq .Limit 50}}selected{{end}}>50</option>
+            </select>
+            <span class="text-[#c0c7d4] text-sm whitespace-nowrap">data</span>
+        </div>
+        <div class="text-[#c0c7d4] text-sm sm:border-l border-white/10 sm:pl-4">
+            📊 Menampilkan {{.Start}} - {{.End}} dari {{.TotalData}} data
+        </div>
+    </div>
 
+    <!-- Kanan: Pagination Links -->
+    <div class="flex gap-2 flex-wrap justify-center">
+        <!-- Previous button -->
+        {{if gt .CurrentPage 1}}
+        <a href="?page={{sub .CurrentPage 1}}&limit={{.Limit}}{{if .Keyword}}&search={{.Keyword}}{{end}}" class="px-3 py-1.5 rounded-lg bg-[#1c2a41] border border-white/10 text-[#c0c7d4] hover:bg-[#2c3951] transition-all">
+            <span class="material-symbols-outlined text-sm">chevron_left</span>
+        </a>
+        {{else}}
+        <button disabled class="px-3 py-1.5 rounded-lg bg-[#1c2a41]/50 border border-white/5 text-[#c0c7d4]/50 cursor-not-allowed">
+            <span class="material-symbols-outlined text-sm">chevron_left</span>
+        </button>
+        {{end}}
+
+        <!-- Page numbers -->
+        {{$current := .CurrentPage}}
+        {{$total := .TotalPages}}
+        {{$limit := .Limit}}
+        {{$keyword := .Keyword}}
+        
+        {{range $i := iterate $total}}
+            {{$pageNum := add $i 1}}
+            {{if or (eq $pageNum $current) (eq $pageNum 1) (eq $pageNum $total) (and (ge $pageNum (sub $current 2)) (le $pageNum (add $current 2)))}}
+                {{if eq $pageNum $current}}
+                <span class="px-3 py-1.5 rounded-lg bg-[#3394f1] text-[#002b50] font-bold min-w-[40px] text-center">{{$pageNum}}</span>
+                {{else}}
+                <a href="?page={{$pageNum}}&limit={{$limit}}{{if $keyword}}&search={{$keyword}}{{end}}" class="px-3 py-1.5 rounded-lg bg-[#1c2a41] border border-white/10 text-[#c0c7d4] hover:bg-[#2c3951] transition-all min-w-[40px] text-center">{{$pageNum}}</a>
+                {{end}}
+            {{else if eq $pageNum (add $current 3)}}
+                <span class="px-2 py-1.5 text-[#c0c7d4]">...</span>
+            {{else if eq $pageNum (sub $current 3)}}
+                <span class="px-2 py-1.5 text-[#c0c7d4]">...</span>
+            {{end}}
+        {{end}}
+
+        <!-- Next button -->
+        {{if lt .CurrentPage .TotalPages}}
+        <a href="?page={{add .CurrentPage 1}}&limit={{.Limit}}{{if .Keyword}}&search={{.Keyword}}{{end}}" class="px-3 py-1.5 rounded-lg bg-[#1c2a41] border border-white/10 text-[#c0c7d4] hover:bg-[#2c3951] transition-all">
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+        </a>
+        {{else}}
+        <button disabled class="px-3 py-1.5 rounded-lg bg-[#1c2a41]/50 border border-white/5 text-[#c0c7d4]/50 cursor-not-allowed">
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+        </button>
+        {{end}}
+    </div>
+</div>
+
+            <!-- Pagination Links -->
+            <div class="flex gap-2">
+                {{if gt .CurrentPage 1}}
+                <a href="?page={{sub .CurrentPage 1}}&limit={{.Limit}}{{if .Keyword}}&search={{.Keyword}}{{end}}" class="px-3 py-1 rounded-lg bg-[#1c2a41] border border-white/10 text-[#c0c7d4] hover:bg-[#2c3951] transition-all">
+                    <span class="material-symbols-outlined text-sm">chevron_left</span>
+                </a>
+                {{else}}
+                <button disabled class="px-3 py-1 rounded-lg bg-[#1c2a41]/50 border border-white/5 text-[#c0c7d4]/50 cursor-not-allowed">
+                    <span class="material-symbols-outlined text-sm">chevron_left</span>
+                </button>
+                {{end}}
+
+                <!-- Halaman -->
+                {{$current := .CurrentPage}}
+                {{$total := .TotalPages}}
+                {{$limit := .Limit}}
+                {{$keyword := .Keyword}}
+                
+                {{range $i := iterate $total}}
+                    {{$pageNum := add $i 1}}
+                    {{if or (eq $pageNum $current) (eq $pageNum 1) (eq $pageNum $total) (and (ge $pageNum (sub $current 2)) (le $pageNum (add $current 2)))}}
+                        {{if eq $pageNum $current}}
+                        <span class="px-3 py-1 rounded-lg bg-[#3394f1] text-[#002b50] font-bold">{{$pageNum}}</span>
+                        {{else}}
+                        <a href="?page={{$pageNum}}&limit={{$limit}}{{if $keyword}}&search={{$keyword}}{{end}}" class="px-3 py-1 rounded-lg bg-[#1c2a41] border border-white/10 text-[#c0c7d4] hover:bg-[#2c3951] transition-all">{{$pageNum}}</a>
+                        {{end}}
+                    {{else if eq $pageNum (add $current 3)}}
+                        <span class="px-3 py-1 text-[#c0c7d4]">...</span>
+                    {{else if eq $pageNum (sub $current 3)}}
+                        <span class="px-3 py-1 text-[#c0c7d4]">...</span>
+                    {{end}}
+                {{end}}
+
+                {{if lt .CurrentPage .TotalPages}}
+                <a href="?page={{add .CurrentPage 1}}&limit={{.Limit}}{{if .Keyword}}&search={{.Keyword}}{{end}}" class="px-3 py-1 rounded-lg bg-[#1c2a41] border border-white/10 text-[#c0c7d4] hover:bg-[#2c3951] transition-all">
+                    <span class="material-symbols-outlined text-sm">chevron_right</span>
+                </a>
+                {{else}}
+                <button disabled class="px-3 py-1 rounded-lg bg-[#1c2a41]/50 border border-white/5 text-[#c0c7d4]/50 cursor-not-allowed">
+                    <span class="material-symbols-outlined text-sm">chevron_right</span>
+                </button>
+                {{end}}
+            </div>
+        </div>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
             <thead>
@@ -178,4 +321,14 @@
         <p class="text-[#c0c7d4] text-[13px] leading-[18px]">Menampilkan {{len .WargaList}} dari {{.TotalWarga}} warga</p>
     </div>
 </section>
+<script>
+    // Limit dropdown change handler
+    document.getElementById('limitSelect')?.addEventListener('change', function() {
+        const limit = this.value;
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('limit', limit);
+        currentUrl.searchParams.set('page', '1');
+        window.location.href = currentUrl.toString();
+    });
+</script>
 {{end}}
