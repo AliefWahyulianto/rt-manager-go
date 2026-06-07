@@ -2,15 +2,21 @@
 <div class="space-y-6">
     <!-- Header & Tombol Tambah -->
     <div class="flex justify-between items-center">
-        <div>
-            <h2 class="text-[32px] leading-[40px] font-bold text-[#d6e3ff]">Manajemen Iuran RT</h2>
-            <p class="text-[#c0c7d4]">Catat dan kelola pembayaran iuran warga</p>
-        </div>
+    <div>
+        <h2 class="text-[32px] leading-[40px] font-bold text-[#d6e3ff]">Manajemen Iuran RT</h2>
+        <p class="text-[#c0c7d4]">Catat dan kelola pembayaran iuran warga</p>
+    </div>
+    <div class="flex gap-3">
+        <a href="/iuran/export-pdf" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500 hover:text-white transition-all">
+            <span class="material-symbols-outlined text-lg">picture_as_pdf</span>
+            Export PDF
+        </a>
         <a href="/iuran/tambah" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#3394f1] to-[#0060a8] rounded-lg text-[#002b50] font-bold hover:shadow-lg transition-all">
             <span class="material-symbols-outlined">add</span>
             Tambah Iuran
         </a>
     </div>
+</div>
 
     <!-- Statistik Iuran -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">

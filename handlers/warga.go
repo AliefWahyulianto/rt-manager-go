@@ -12,6 +12,28 @@ import (
 	"github.com/jung-kurt/gofpdf/v2"
 )
 
+// Helper untuk konversi nama bulan ke index (0-11)
+func getBulanIndex(bulan string) int {
+	bulanMap := map[string]int{
+		"Januari":   0,
+		"Februari":  1,
+		"Maret":     2,
+		"April":     3,
+		"Mei":       4,
+		"Juni":      5,
+		"Juli":      6,
+		"Agustus":   7,
+		"September": 8,
+		"Oktober":   9,
+		"November":  10,
+		"Desember":  11,
+	}
+	if idx, ok := bulanMap[bulan]; ok {
+		return idx
+	}
+	return -1
+}
+
 type WargaHandler struct {
 	Model *models.WargaModel
 }
@@ -101,6 +123,43 @@ func (h *WargaHandler) Dashboard(w http.ResponseWriter, r *http.Request) {
 	eventModel := models.NewEventModel(h.Model.DB)
 	eventMendatang, _ := eventModel.GetEventAkanDatang()
 
+	// ========== DATA UNTUK GRAFIK ==========
+	// Ambil data iuran untuk grafik per bulan (pakai iuranModel yang sudah ada)
+	allIuran, _ := iuranModel.GetAll()
+
+	// Inisialisasi data per bulan (Januari - Desember)
+	bulanList := []string{"Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"}
+	iuranPerBulan := make([]int, 12)
+	iuranTarget := make([]int, 12)
+
+	// Isi target (misal target iuran per bulan = jumlah warga * 25000)
+	targetPerWarga := 25000
+	for i := 0; i < 12; i++ {
+		iuranTarget[i] = totalWarga * targetPerWarga
+	}
+
+	// Hitung iuran terkumpul per bulan
+	for _, iuran := range allIuran {
+		if iuran.Status == "Lunas" {
+			bulanIndex := getBulanIndex(iuran.Bulan)
+			if bulanIndex >= 0 && bulanIndex < 12 {
+				iuranPerBulan[bulanIndex] += iuran.Nominal
+			}
+		}
+	}
+
+	// Hitung statistik iuran (Lunas vs Belum)
+	totalLunas := 0
+	totalBelum := 0
+	for _, iuran := range allIuran {
+		if iuran.Status == "Lunas" {
+			totalLunas += iuran.Nominal
+		} else {
+			totalBelum += iuran.Nominal
+		}
+	}
+	// ======================================
+
 	// Ambil jadwal ronda malam ini
 	rondaModel := models.NewRondaModel(h.Model.DB)
 	rondaMalamIni, _ := rondaModel.GetJadwalMalamIni()
@@ -146,6 +205,19 @@ func (h *WargaHandler) Dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 			return "Rp " + strconv.Itoa(nominal)
 		},
+		"json": func(v interface{}) string { // <-- TAMBAHKAN INI
+			b, _ := json.Marshal(v)
+			return string(b)
+		},
+	}
+	// Ambil data pengaturan
+	pengaturanModel := models.NewPengaturanModel(h.Model.DB)
+	pengaturan, _ := pengaturanModel.Get()
+	if pengaturan == nil {
+		pengaturan = &models.Pengaturan{
+			NamaRT:    "RT 05",
+			NamaKetua: "Bambang Wijaya",
+		}
 	}
 
 	data := map[string]interface{}{
@@ -163,10 +235,18 @@ func (h *WargaHandler) Dashboard(w http.ResponseWriter, r *http.Request) {
 		"Start":           start + 1,
 		"End":             end,
 		"TotalData":       totalData,
+		"BulanList":       bulanList,
+		"IuranPerBulan":   iuranPerBulan,
+		"IuranTarget":     iuranTarget,
+		"TotalLunas":      totalLunas,
+		"TotalBelum":      totalBelum,
+		"NamaRT":          pengaturan.NamaRT,
+		"NamaKetua":       pengaturan.NamaKetua,
 	}
 
 	tmpl := template.Must(template.New("layout.html").Funcs(funcMap).ParseFiles("templates/layout.html", "templates/dashboard.html"))
 	tmpl.Execute(w, data)
+
 }
 
 // Tambah menampilkan form tambah dan memproses submit

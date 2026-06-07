@@ -1,0 +1,53 @@
+{{define "content"}}
+<div class="max-w-3xl mx-auto">
+    <div class="glass-panel rounded-2xl p-8">
+        <div class="flex items-center gap-3 mb-6">
+            <span class="material-symbols-outlined text-3xl text-[#a2c9ff]">settings</span>
+            <h2 class="text-[32px] leading-[40px] font-bold text-[#d6e3ff]">Pengaturan RT</h2>
+        </div>
+        <p class="text-[#c0c7d4] mb-6">Kelola informasi profil RT yang akan ditampilkan di sistem</p>
+
+        <form method="POST" action="/pengaturan/edit" class="space-y-5">
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Nama RT</label>
+                <input type="text" name="nama_rt" value="{{.Pengaturan.NamaRT}}" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff] focus:outline-none focus:border-[#a2c9ff]/50">
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Nama Ketua RT</label>
+                <input type="text" name="nama_ketua" value="{{.Pengaturan.NamaKetua}}" required class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Alamat Kantor RT</label>
+                <input type="text" name="alamat_kantor" value="{{.Pengaturan.AlamatKantor}}" class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-[#c0c7d4] text-sm mb-2">No Telepon</label>
+                    <input type="tel" name="no_telepon" value="{{.Pengaturan.NoTelepon}}" class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+                </div>
+                <div>
+                    <label class="block text-[#c0c7d4] text-sm mb-2">Email</label>
+                    <input type="email" name="email" value="{{.Pengaturan.Email}}" class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-[#c0c7d4] text-sm mb-2">Website (opsional)</label>
+                <input type="url" name="website" value="{{.Pengaturan.Website}}" placeholder="https://..." class="w-full bg-[#010e24] border border-[#404752]/30 rounded-xl py-3 px-4 text-[#d6e3ff]">
+            </div>
+
+            <div class="flex gap-4 pt-4">
+                <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-[#3394f1] to-[#0060a8] text-[#002b50] font-bold hover:shadow-lg transition-all">
+                    Simpan Pengaturan
+                </button>
+                <a href="/" class="flex-1 py-3 rounded-xl text-center bg-[#1c2a41] border border-white/10 text-[#c0c7d4] hover:bg-[#2c3951] transition-all">
+                    Batal
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{{end}}

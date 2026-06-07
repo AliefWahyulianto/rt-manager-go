@@ -57,6 +57,10 @@ func main() {
 	eventModel := models.NewEventModel(db)
 	eventHandler := handlers.NewEventHandler(eventModel)
 
+	// Inisialisasi model pengaturan
+	pengaturanModel := models.NewPengaturanModel(db)
+	pengaturanHandler := handlers.NewPengaturanHandler(pengaturanModel)
+
 	// Routing
 	http.HandleFunc("/", wargaHandler.Dashboard)
 	http.HandleFunc("/tambah", wargaHandler.Tambah)
@@ -69,6 +73,7 @@ func main() {
 	http.HandleFunc("/iuran/edit/", iuranHandler.Edit)
 	http.HandleFunc("/iuran/hapus/", iuranHandler.Hapus)
 	http.HandleFunc("/iuran/lunas/", iuranHandler.TandaiLunas)
+	http.HandleFunc("/iuran/export-pdf", iuranHandler.ExportPDF)
 
 	http.HandleFunc("/ronda", rondaHandler.Index)
 	http.HandleFunc("/ronda/tambah", rondaHandler.Tambah)
@@ -88,6 +93,11 @@ func main() {
 	http.HandleFunc("/event/tambah", eventHandler.Tambah)
 	http.HandleFunc("/event/edit/", eventHandler.Edit)
 	http.HandleFunc("/event/hapus/", eventHandler.Hapus)
+
+	// ========== ROUTING PENGATURAN ==========
+	http.HandleFunc("/pengaturan", pengaturanHandler.Index)
+	http.HandleFunc("/pengaturan/edit", pengaturanHandler.Edit)
+	// ========================================
 
 	log.Println("🚀 Server berjalan di http://localhost:8080")
 	log.Println("📁 Database: Badger (folder ./database)")

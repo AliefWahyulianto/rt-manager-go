@@ -48,8 +48,8 @@
             <span class="material-symbols-outlined text-[#002b50]" style="font-variation-settings: 'FILL' 1;">admin_panel_settings</span>
         </div>
         <div>
-            <h1 class="text-[20px] leading-[28px] font-bold text-[#a2c9ff]">Pak RT</h1>
-            <p class="text-[13px] leading-[18px] text-[#c0c7d4] opacity-70">Ketua RT 05</p>
+            <h1 class="text-[20px] leading-[28px] font-bold text-[#a2c9ff]">{{.NamaRT}}</h1>
+            <p class="text-[13px] leading-[18px] text-[#c0c7d4] opacity-70">Ketua RT {{.NamaKetua}}</p>
         </div>
     </div>
     
@@ -84,7 +84,7 @@
         <span>Laporan</span>
     </a>
     
-    <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-[#c0c7d4] hover:bg-[#2c3951]/50">
+    <a href="/pengaturan" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 {{if eq .ActivePage "pengaturan"}}text-[#a2c9ff] border-l-4 border-[#a2c9ff] bg-[#a2c9ff]/10{{else}}text-[#c0c7d4] hover:bg-[#2c3951]/50{{end}}">
         <span class="material-symbols-outlined">settings</span>
         <span>Pengaturan</span>
     </a>
